@@ -1,0 +1,511 @@
+
+Create database hope;
+
+#app runs with this user, no create/drop table for this guy.
+CREATE USER abcd@'localhost' IDENTIFIED BY 'abcd@abcd';
+
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON hope.* TO abcd@localhost;
+FLUSH PRIVILEGES;
+
+\u hope
+
+CREATE TABLE `smsPatterns` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `senderId` varchar(30) NOT NULL,
+  `config` text,
+  `notes` text,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `unresolvedSMS` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `senderId` varchar(30) NOT NULL,
+  `smsBody` text,
+  `smsId` varchar(80) NOT NULL,
+  `issueType` varchar(15) NOT NULL,
+  `notes` text,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `merchantInfo` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `merchantId` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `nameRegEx` varchar(200),
+  `popularName` text NOT NULL,
+  `category` varchar(25) NOT NULL,
+  `googlePlaceId` varchar(100),
+  `city` text NOT NULL,
+  `notes` text,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10000 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `configs` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `key` varchar(50) NOT NULL,
+  `value` text NULL,
+  `type` varchar(20) NOT NULL,
+  `bucket` varchar(20),
+  `notes` text,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+#Where we store all the finally processed SMSs.
+# receivedDate is the date SMS was received in the user phone in his time settings,
+# parsedDate is what was parsed out of SMS body.
+CREATE TABLE `SMSProcessed` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `rawSMSId` varchar(50) NOT NULL UNIQUE,
+  `userId` varchar(50) NOT NULL,
+  `merchantId` varchar(50) NOT NULL,
+  `senderId` varchar(30),
+  `smsBody` text,
+  `cost` DOUBLE,
+  `cardType` varchar(50),
+  `cardNum` varchar(50),
+  `transactionType` varchar(20),
+  `receivedDate` timestamp  NULL DEFAULT NULL,
+  `parsedDate` timestamp  NULL DEFAULT NULL,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+#receivedDate the string as received with no parsing.
+CREATE TABLE `SMSRaw` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `rawSMSId` varchar(50) NOT NULL UNIQUE,
+  `userId` varchar(50) NOT NULL,
+  `senderId` varchar(30),
+  `smsBody` text,
+  `receivedDate` varchar(80),
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `userSettings` (
+  `userId` varchar(36) NOT NULL,
+  `autoDebit` bool NOT NULL,
+  `amountPerSpend` int NOT NULL,
+  `maxAmountPerMonth` int NOT NULL,
+  `isPaytmConnected` bool DEFAULT false,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`userId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `userInfo` (
+  `userId` varchar(36) NOT NULL,
+  `oAuthId` varchar(48) NOT NULL UNIQUE,
+  `oAuthType` varchar(20),
+  `firstName` varchar(50),
+  `secondName` varchar(50),
+  `city` varchar(30),
+  `phone` varchar(20),
+  `email` varchar(50),
+  `pan` varchar(20),
+  `profileLink` varchar(300),
+  `profilePic` varchar(300),
+  `status` varchar(10),
+  `type` varchar(10),
+  `latitude` DECIMAL(11, 8) DEFAULT 0,
+  `longitude` DECIMAL(11, 8) DEFAULT 0,
+  `notificationToken` text,
+  `address` text,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`userId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+CREATE TABLE `NGOEntry` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100),
+  `address` varchar(200),
+  `description` text,
+  `phone` varchar(20),
+  `email` varchar(100),
+  `contactPersonName` varchar(100),
+  `specialAward` text,
+  `webURL` varchar(200),
+  `picURLsJson` text,
+  `visitSlotsMapJson` text,
+  `latitude` DECIMAL(11, 8) DEFAULT 0,
+  `longitude` DECIMAL(11, 8) DEFAULT 0,
+  `volunteerRequiredText` text,
+  `pageUrl` varchar(300),
+  `livesImpacted` int DEFAULT 0,
+  `smallDesc` text,
+  `smallImageUrl` varchar(300),
+  `notes` text,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3120 DEFAULT CHARSET=latin1;
+
+
+
+CREATE TABLE `NGOCause` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ngoId` int(11) unsigned NOT NULL,
+  `channelType` varchar(100) DEFAULT 'both',
+  `name` varchar(100),
+  `targetAmount` int default 0,
+  `amountAchieved` float default 0,
+  `endTimestamp` timestamp NULL,
+  `description` text,
+  `numSupporters` int default 0,
+  `isActive` bool DEFAULT true,
+  `picURLsJson` text,
+  `isDonationEnabled` bool DEFAULT true,
+  `isVolunteerEnabled` bool DEFAULT true,
+  `donationsDisabledText` text,
+  `volunteerDisabledText` text,
+  `volunteerRequiredText` text,
+  `volunteerFormURL` text,
+  `webUrl` varchar(300),
+  `smallImageUrl` varchar(300),
+  `tagsJson` text,
+  `notes` text,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5622 DEFAULT CHARSET=latin1;
+
+
+
+CREATE TABLE `userCauseEntry` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` varchar(36) NOT NULL,
+  `causeId` int(11) unsigned NOT NULL,
+  `isActiveForUser` bool,
+  `percentAllocation` double default 0,
+  `amountContributed` double default 0,
+  `notes` text,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_items` (`userId`,`causeId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `transactions` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` varchar(36) NOT NULL,
+  `amount` double NOT NULL,
+  `transactionCost` double NOT NULL,
+  `isOnetime` bool default false,
+  `causeId` int(11) unsigned default 0,
+  `smsId` varchar(50),
+  `externalReferenceId` varchar(100),
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=198700 DEFAULT CHARSET=latin1;
+
+
+#can be used to track donations to a cause in auto-debit case since the user causes can keep changing
+CREATE TABLE `causeDonations` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `transactionId` int(11) unsigned NOT NULL,
+  `causeId` int(11) unsigned NOT NULL,
+  `userId` varchar(36) NOT NULL,
+  `amountForCause` double NOT NULL,
+  `amount` double NOT NULL,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=198700 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `visitEntries` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `causeId` int(11) NOT NULL,
+  `userId` varchar(36) NOT NULL DEFAULT '',
+  `slot` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `paymentOptions` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` text,
+  `settings` text,
+  `status` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+  CREATE TABLE `HeroItemInfo` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `typeForApp` varchar(100) NOT NULL ,
+  `tagFilter`  varchar(100),
+  `imageURL`  varchar(400) NOT NULL,
+  `text` text,
+  `buttonText` varchar(30),
+  `quote` varchar(200),
+  `pageTitle` varchar(30),
+  `contentTitle` varchar(50),
+  `active` bool DEFAULT false,
+  `liveType` varchar(100) DEFAULT 'all',
+  `liveTypeMetaJson` text,
+  `notes` text,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `kindDonationEntries` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` varchar(36) DEFAULT NULL,
+  `donation` text,
+  `time` text,
+  `isComplete` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8
+
+CREATE TABLE `kindDonationInfo` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` text,
+  `description` text,
+  `unit` text,
+  `max` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `keyValues` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `keyName` varchar(100),
+  `typeName` varchar(100),
+  `fieldValue` text,
+  `notes` text,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `SARewards` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(200) NOT NULL,
+  `imageUrl` varchar(300) NOT NULL,
+  `details` text,
+  `points` int(11) NOT NULL,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `SARewardsRedeem` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` varchar(40) NOT NULL,
+  `rewardId` varchar(40) NOT NULL,
+  `pointsValue` int(11) NOT NULL,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+
+#These changes has been updated in the table creation above.
+#ALTER TABLE NGOCause ADD volunteerFormURL text AFTER volunteerRequiredText;
+#ALTER TABLE NGOCause ADD tagsJson text AFTER volunteerFormURL;
+#ALTER TABLE userInfo ADD latitude DECIMAL(11, 8) DEFAULT 0 AFTER type;
+#ALTER TABLE userInfo ADD longitude DECIMAL(11, 8) DEFAULT 0 AFTER latitude;
+#ALTER TABLE userInfo ADD notificationToken text AFTER longitude;
+
+#ALTER TABLE NGOCause ADD webUrl varchar(300) AFTER volunteerRequiredText;
+#ALTER TABLE NGOCause ADD smallImageUrl varchar(300) AFTER webUrl;
+#ALTER TABLE NGOCause ADD channelType varchar(300) DEFAULT 'both' AFTER ngoId;
+
+#ALTER TABLE NGOEntry ADD pageUrl varchar(300) AFTER volunteerRequiredText;
+#ALTER TABLE NGOEntry ADD livesImpacted int DEFAULT 0 AFTER pageUrl;
+#ALTER TABLE NGOEntry ADD smallDesc text AFTER pageUrl;
+#ALTER TABLE NGOEntry ADD smallImageUrl varchar(300) AFTER smallDesc;
+
+
+
+################################ Dataturks annotation ###############################################
+
+CREATE TABLE `d_project_invites` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `inviterId` varchar(36) NOT NULL,
+  `projectId` varchar(36) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+#all available subscription plans
+CREATE TABLE `d_subscription_plans` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(36) NOT NULL,
+  `paid` TINYINT(1) default 0,
+  `amountPerMonth` double default 0,
+  `discountPercent` int default 0,
+  `numProjects` int default 100,
+  `numHITsPerProject` int default 1000000,
+  `totalStorageInGBs` int default 10,
+  `numUsers` int default 1,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+#subscription for each org like payment method, current plan subscribed to etc.
+CREATE TABLE `d_subscriptions` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `orgId` varchar(36) NOT NULL,
+  `planId` int(11) unsigned NOT NULL,
+  `paymentMethodId` int(11) unsigned default 0,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+#all users/admins etc which belong to an org. For an individual account, the user is the only entry with admin privilages.
+CREATE TABLE `d_org_users` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `orgId` varchar(36) NOT NULL,
+  `userId` varchar(36) NOT NULL,
+  `role` varchar(10),
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+#each company or individual is an org.
+CREATE TABLE `d_orgs` (
+  `id` varchar(36) NOT NULL,
+  `name` varchar(36) NOT NULL,
+  `subscriptionId` int(11) unsigned NOT NULL,
+  `website` varchar(300),
+  `contactName` varchar(50),
+  `contactEmail` varchar(100),
+  `contactPhone` varchar(20),
+  `city` varchar(50),
+  `country` varchar(50),
+  `logoPic` varchar(300),
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `d_users` (
+  `id` varchar(36) NOT NULL,
+  `oAuthId` varchar(48) NOT NULL UNIQUE,
+  `oAuthType` varchar(20),
+  `firstName` varchar(50),
+  `secondName` varchar(50),
+  `city` varchar(30),
+  `phone` varchar(20),
+  `email` varchar(50) NOT NULL UNIQUE,
+  `profileLink` varchar(300),
+  `profilePic` varchar(300),
+  `status` varchar(10),
+  `notificationToken` text,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+#owners/contributors of a project.
+CREATE TABLE `d_project_users` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `projectId` varchar(36) NOT NULL,
+  `userId` varchar(36) NOT NULL,
+  `role` varchar(20),
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+# projects. use d_project_users to find who owns it. accessType is private/restricted/public (for a company owned project, public is all users
+# in that company). 'taskRules' define the valid labels, valid classes etc.
+#status is active/deleted.
+CREATE TABLE `d_projects` (
+  `id` varchar(36) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `orgId` varchar(36) NOT NULL,
+  `accessType` varchar(50),
+  `taskType` varchar(50),
+  `taskRules` text,
+  `status` varchar(50),
+  `totalStorageInMBs` int default 0,
+  `validateWithGoldenHITs` bool default false,
+  `minGoldenHITs` int default 5,
+  `HITRepeatCount` int default 2,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+
+#each hit for a project. 'data' can have actual text/URL based on the project's taskType. 'status' says hit done/not done (helps query faster).
+CREATE TABLE `d_hits` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `projectId` varchar(36) NOT NULL,
+  `data` varchar(500),
+  `status` varchar(50) NOT NULL default 'notDone',
+  `isGoldenHIT` bool default false,
+  `goldenHITResultId` int(11) unsigned default 0,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+
+#result of an hit. 'result' is the tagging for the hit, possible a json describing the label or the bounding boxes in an image.
+# 'hitId' is 0 for rows holding goldenHit expected results (these rows are referred by 'goldenHITResultId' value in d_hits table).
+CREATE TABLE `d_hits_result` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `hitId` int(11) unsigned NOT NULL,
+  `projectId` varchar(36) NOT NULL,
+  `result` text,
+  `userId` varchar(36) NOT NULL,
+  `timeTakenToLabelInSec` int(11) unsigned default 0,
+  `notes` text,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+
+
+###########Indexes:
+d_hits_result	0	PRIMARY	1	id	A	371696	NULL	NULL		BTREE
+d_hits_result	1	project_id_index	1	projectId	A	1011	NULL	NULL		BTREE
+d_hits_result	1	user_id_index	1	userId	A	373	NULL	NULL		BTREE
+d_hits_result	1	hitId	1	hitId	A	402653	NULL	NULL		BTREE
+
+d_hits	0	PRIMARY	1	id	A	1764819	NULL	NULL		BTREE
+d_hits	1	project_id_index	1	projectId	A	859	NULL	NULL		BTREE
+
+
+

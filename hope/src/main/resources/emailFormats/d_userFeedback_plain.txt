@@ -1,0 +1,19 @@
+Hi __USER_NAME__,
+
+<p>
+I am Mohan, co-founder at Dataturks. Happy to e-meet you :).
+</p>
+
+<p>
+I see that you briefly explored Dataturks but did not fully use it.
+I wanted to personally check if there was some error or any problem you faced using Dataturks? Please reply to this mail to let us know.
+</p>
+
+<p>
+I am eager to hear your feedback and do everything possible to help in building your datasets.
+</p>
+<br />
+
+-Mohan
+<br />
+ <a href="https://dataturks.com">dataturks.com</a>

@@ -1,0 +1,41 @@
+{
+  "apps" : [
+
+    {
+      "name": "bazaar",
+      "script": "./bin/server.js",
+      "instances"  : 0,
+      "exec_mode"  : "cluster_mode",
+      "env": {
+        "NODE_ENV": "production",
+        "PORT": 3000,
+        "APIPORT": 3030,
+        "NODE_PATH": "./src"
+      }
+    },
+
+    {
+      "name": "bazaar_api",
+      "script": "./bin/api.js",
+      "instances"  : 0,
+      "exec_mode"  : "cluster_mode",
+      "env": {
+        "NODE_ENV": "production",
+        "APIPORT": 3030,
+        "NODE_PATH": "./api"
+      }
+    }
+  ],
+   "deploy" : {
+     // "production" is the environment name
+     "production" : {
+       "user" : "ubuntu",
+       "host" : ["ec2-35-164-196-142.us-west-2.compute.amazonaws.com"],
+       "ref"  : "origin/master",
+       "repo" : "git@bitbucket.org:dataturk/bazaar.git",
+       "path" : "/var/www/html/bazaar",
+       "key" : "~/Downloads/datamint1.pem",
+       "post-deploy" : "npm install && npm run build &&  pm2 startOrRestart ecosystem.json --env production"
+      },
+   }  
+}

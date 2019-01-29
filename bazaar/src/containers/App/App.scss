@@ -1,0 +1,61 @@
+.app {
+  .a:hover {
+      color: white
+  }
+  .brand {
+    position: absolute;
+    $size: 40px;
+    top: 5px;
+    color: 'white';
+    display: inline-block;
+    width: $size;
+    height: $size;
+    background-size: 80%;
+    margin: 0 10px 0 0;
+    border-radius: $size / 2;
+  }
+  nav :global(.fa) {
+    font-size: 2em;
+    line-height: 20px;
+  }
+
+  h2{
+    color: 'white';
+  }
+  navbar {
+    height: 60px;
+  }
+}
+.brandLink {
+  margin-top: 7px;
+  font-weight: 500;
+  font-size: 25px;
+}
+.appContent {
+  margin: 30px 0; // for fixed navbar
+}
+
+.page {
+  height: 500px;
+}
+
+.sidebar {
+  margin-top: 100px;
+  width: 50px;
+}
+
+@media screen and (max-width: 600px) {
+.mobile_hide {
+    visibility: hidden;
+    clear: both;
+    float: left;
+    margin: 10px auto 5px 20px;
+    width: 28%;
+    display: none;
+  }
+}
+
+
+
+
+

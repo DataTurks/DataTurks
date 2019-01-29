@@ -1,0 +1,16 @@
+# Ignore everything
+**
+
+# Allow files and directories
+!./bazaar/**
+!./code/hope/docker/**
+!./code/hope/target/dataturks-1.0-SNAPSHOT.jar
+!./code/hope/onprem.yml
+
+# Ignore unnecessary files inside allowed directories
+# This should go after the allowed directories
+**/*~
+**/*.log
+**/.DS_Store
+**/Thumbs.db
+./bazaar/node_modules/**

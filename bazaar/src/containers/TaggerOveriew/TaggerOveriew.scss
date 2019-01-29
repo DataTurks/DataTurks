@@ -1,0 +1,50 @@
+.tagLine {
+	word-spacing: 15px;
+}
+
+.content
+{
+  height:800px;
+   overflow:auto;
+    background:#F4F2F2;
+    padding: 2em 2em 2em 2em;
+}	
+
+
+.tag_Label {
+	padding: 1em;
+}
+
+.clickableLabel {
+	cursor: pointer;
+}
+
+.entityTag {
+	
+}
+
+.dataArea {
+    min-height: 3em;
+    background: lightgray;
+    color: black;
+    font-size: 1.5rem;
+    padding: 5%;
+    margin-top: 2%;
+    margin-left: 10%;
+    margin-right: 10%;
+    word-spacing: 1.2rem;
+    font-weight: 500;
+}
+
+.resultArea {
+    min-height: 3em;
+    background: lightslategrey;
+    color: white;
+    margin-top: 2%;
+    font-size: 1.5rem;
+    font-weight: 300;
+    word-spacing: 1.2rem;
+    padding: 5%;	
+    margin-left: 10%;
+    margin-right: 10%;
+}

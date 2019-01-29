@@ -1,0 +1,17 @@
+/target/
+*.iml
+*.jks
+*.ipr
+*.iws
+.idea
+*.swp
+.project
+.svn
+/logs/
+.DS_Store
+/data/
+.classpath
+.settings/
+overlays/
+*.ipynb_checkpoint
+scripts/.ipynb_checkpoint/

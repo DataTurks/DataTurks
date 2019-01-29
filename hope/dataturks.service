@@ -1,0 +1,12 @@
+[Unit]
+Description=Dataturks service
+After=local-fs.target network.target
+
+[Service]
+User=root
+WorkingDirectory=/home/ubuntu/dataturks
+ExecStart=/usr/bin/java -server -jar dataturks-1.0-SNAPSHOT.jar server dataturks-prod.yml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

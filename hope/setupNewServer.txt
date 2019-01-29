@@ -1,0 +1,34 @@
+#Asuming Ubuntu AWS EC2 box
+
+Install java:
+sudo apt-get update
+sudo apt-get install openjdk-8-jdk
+
+#make directory
+mkdir /home/ubuntu/dataturks
+mkdir /home/ubuntu/dataturks/logs
+mkdir /home/ubuntu/dataturks/keys
+
+
+
+#SCP all files to the server. From local host.
+scp ./target/dataturks-1.0-SNAPSHOT.jar datamint:~/dataturks/
+scp ./dataturks-prod.yml datamint:~/dataturks/
+scp ./dataturks.service datamint:~/dataturks/
+
+#copy the HTTPS keystore file.
+scp dataturksWithIntermediary.jks datamint:~/dataturks/keys/
+
+#copy the Firebase Admin SDK private key file..
+scp ~/bonsaiFirebase.json datamint:~/dataturks/keys/
+scp ~/dataturksFirebase.json datamint:~/dataturks/keys/
+scp ~/saFirebase.json datamint:~/dataturks/keys/
+
+#copy the startup file.
+sudo cp ./dataturks/dataturks.service /etc/systemd/system/dataturks.service
+
+#make service start on reboot
+sudo systemctl enable dataturks.service
+
+#Start service
+sudo systemctl start dataturks

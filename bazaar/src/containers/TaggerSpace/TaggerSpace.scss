@@ -1,0 +1,44 @@
+.tagLine {
+	word-spacing: 15px;
+}
+
+.fullScreenClass {
+    overflow: scroll;
+}
+.textStyle {
+	width: 100%;
+    word-spacing: 1.1rem;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    padding: 2rem;
+    text-align: left;
+    font-size: 2rem;
+    color: black;
+    font-weight: 600;
+}
+.tagArea {
+	background: #E0E0E0;
+	padding: 1em 1em 1em 1em;
+	line-height: 4em;
+	position: relative;
+    marginTop: '10px';
+}
+.classifyArea {
+    background: #E0E0E0;
+    padding: 1.0em;
+    position: relative;
+}
+
+.copyButton {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+ }
+
+.tag_Label {
+	padding: 1em;
+}
+
+.clickableLabel {
+	cursor: pointer;
+}
