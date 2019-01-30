@@ -7,9 +7,9 @@ RUN echo "NODE_ENV=development" >> /etc/environment
 
 ENV BASE_DIR=/home/dataturks
 ENV BAZAR_PARENT_DIR=/home/dataturks
-ENV LOCAL_DOCKER_DIR=./code/hope/docker
+ENV LOCAL_DOCKER_DIR=./hope/docker
 ENV LOCAL_BAZAAR_DIR=./bazaar
-ENV LOCAL_HOPE_DIR=./code/hope/
+ENV LOCAL_HOPE_DIR=./hope/
 
 RUN mkdir $BASE_DIR
 RUN mkdir $BASE_DIR/logs
@@ -71,7 +71,7 @@ COPY $LOCAL_BAZAAR_DIR/static $BAZAR_PARENT_DIR/bazaar/static
 
 COPY $LOCAL_BAZAAR_DIR/js $BAZAR_PARENT_DIR/bazaar/js
 COPY $LOCAL_BAZAAR_DIR/css $BAZAR_PARENT_DIR/bazaar/css
-COPY $LOCAL_BAZAAR_DIR/img $BAZAR_PARENT_DIR/bazaar/img
+#COPY $LOCAL_BAZAAR_DIR/img $BAZAR_PARENT_DIR/bazaar/img
 COPY $LOCAL_BAZAAR_DIR/vendor $BAZAR_PARENT_DIR/bazaar/vendor
 
 COPY $LOCAL_BAZAAR_DIR/.babelrc $BAZAR_PARENT_DIR/bazaar/.babelrc
