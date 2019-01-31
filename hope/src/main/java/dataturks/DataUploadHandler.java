@@ -208,12 +208,20 @@ public class DataUploadHandler {
                 String hitResultData = null;
                 String hitExtras = null;
 
-                if (node.has("annotation")) {
+                if (node.has("annotation") &&
+                        !(node.get("annotation") instanceof com.fasterxml.jackson.databind.node.NullNode)) {
                     hitResultData = mapper.writeValueAsString(node.get("annotation"));
                 }
 
-                if (node.has("extras")) {
+                if (node.has("extras") &&
+                        !(node.get("extras") instanceof com.fasterxml.jackson.databind.node.NullNode)) {
                     hitExtras = mapper.writeValueAsString(node.get("extras"));
+                }
+
+                if (node.has("metadata") &&
+                        !(node.get("metadata") instanceof com.fasterxml.jackson.databind.node.NullNode) &&
+                        node.get("metadata").has("status")) {
+                    dataItemStatus = node.get("metadata").get("status").textValue();
                 }
 
                 if (Validations.isValidDataItemForTextTask(hitData, reqObj)) {
