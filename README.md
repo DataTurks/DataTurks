@@ -26,7 +26,19 @@ Two main subcomponents:
     
   2. Bazaar: React based front-end.
    
-    Build:
+  Mac Setup :
+    brew install node@8
+    brew link node@8
+    conda create -n bazaar python=2.7 anaconda
+    conda activate bazaar
+    xcode-select --install
+    sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+    rm -rf node_modules
+    npm rebuild node-sass
+    npm install
+    npm run dev  
+   
+  Linux Setup:
     Install Node Js etc.
     #sudo apt-get -y install build-essential && \
 	  curl -sL https://deb.nodesource.com/setup_8.x | bash && \
