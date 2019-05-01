@@ -1,3 +1,12 @@
+# Features
+  ## NER tagging in Documents
+	### Full length document annotations (PDF, Doc, Text etc).
+  ## Image Segmentation
+        ### Draw free form polygons and generate image masks.
+  ## POS tagging
+        ### A super easy interface to tag for PoS/NER in sentences.
+
+
 # DataTurks
 
 [Note: As on March 2019, please use the branch master_with_dist as the main master branch has some build issues w.r.t dist folder]
