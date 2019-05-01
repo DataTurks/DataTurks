@@ -27,6 +27,7 @@ Two main subcomponents:
   2. Bazaar: React based front-end.
    
   Mac Setup :
+        
     brew install node@8
     brew link node@8
     conda create -n bazaar python=2.7 anaconda
