@@ -49,22 +49,25 @@ Two main subcomponents:
     npm run dev  
    
   Linux Setup:
-    Install Node Js etc.
-    #sudo apt-get -y install build-essential && \
-	  curl -sL https://deb.nodesource.com/setup_8.x | bash && \
-	  apt-get install --yes nodejs && \
-	  node -v && \
-	  npm -v && \ 
-	  npm i -g nodemon && \
-	  nodemon -v && \
-	  apt-get clean
+        Install Node Js etc.
+        
+	sudo apt-get -y install build-essential 
+	curl -sL https://deb.nodesource.com/setup_8.x | bash 	  
+	apt-get install --yes nodejs 	  
+	node -v 	  
+	npm -v  	  
+	npm i -g nodemon 	  
+	nodemon -v	  
+	apt-get clean 	  
    
-    Build:
-      # cd bazaar
-      # npm install && npm run build-onprem
+   Build:
+      
+      cd bazaar
+      npm install && npm run build-onprem
     
-    Run the service:
-     # npm run start-onprem
+   Run the service:
+     
+      npm run start-onprem
     
     
 
