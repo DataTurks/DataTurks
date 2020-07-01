@@ -15,7 +15,7 @@
         <dropwizard.version>1.0.2</dropwizard.version>
         <metrics.version>3.1.0</metrics.version>
         <jersey-media.version>2.25</jersey-media.version>
-        <mysql-connector.version>5.1.29</mysql-connector.version>
+        <mysql-connector.version>8.0.16</mysql-connector.version>
         <commons-dbutils.version>1.6</commons-dbutils.version>
         <httpcomponents.version>4.3</httpcomponents.version>
         <tika.version>1.17</tika.version>
