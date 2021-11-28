@@ -47,7 +47,7 @@ RUN chmod +x ./init.sh && \
 
 #Install Node 8
 RUN apt-get -y install build-essential && \
-	curl -sL https://deb.nodesource.com/setup_8.x | bash && \
+	curl -sL https://deb.nodesource.com/setup_14.x | bash && \
 	apt-get install --yes nodejs && \
 	node -v && \
 	npm -v && \ 
