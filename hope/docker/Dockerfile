@@ -19,10 +19,10 @@ WORKDIR $BASE_DIR
 
 # Install basics
 RUN apt-get update && \
-	apt-get -y install mysql-server && \
+	apt-get -y install mariadb-server && \
 	apt-get -y install apache2 && \
-	apt-get install -y php7.0 && \
-	apt-get install -y libapache2-mod-php7.0 && \
+	apt-get install -y php7.4 && \
+	apt-get install -y libapache2-mod-php7.4 && \
 	apt-get clean
 
 
@@ -31,7 +31,7 @@ COPY $LOCAL_DOCKER_DIR/onprem-dataturks.com.conf /etc/apache2/sites-available/00
 
 
 RUN a2enmod proxy_http && \
-    a2enmod php7.0 && \
+    a2enmod php7.4 && \
     a2ensite onprem-dataturks.com.conf
 
 
